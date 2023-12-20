@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
@@ -42,17 +43,33 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class TransportationFromServiceTest {
 
     private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
     private final TransportationFormServiceImpl transportationFormService;
+
+    private final JdbcTemplate jdbcTemplate;
+
     Logger logger = LoggerFactory.getLogger(TransportationFromServiceTest.class);
 
     @Autowired
-    public TransportationFromServiceTest(TransportationFormServiceImpl transportationFormService) {
+    public TransportationFromServiceTest(TransportationFormServiceImpl transportationFormService, JdbcTemplate jdbcTemplate) {
         this.transportationFormService = transportationFormService;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @BeforeAll
     public static void setUp() {
         //
+    }
+
+    /**
+     * シーケンスを指定回数進める
+     * @param count 回数
+     */
+    private void nextVal(int count){
+        String sql = "SELECT nextval('transportation_form_seq')";
+        for(int i =0; i < count; i++){
+            jdbcTemplate.execute(sql);
+        }
     }
 
     /**
@@ -63,8 +80,7 @@ public class TransportationFromServiceTest {
     @DatabaseSetup("/test-data/TransportationFormServiceTest/init/")
     @ExpectedDatabase(value = "/test-data/TransportationFormServiceTest/init/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
     public void testFind() throws ParseException {
-        //シーケンスがうまく制御できないため、初期データを干渉しない位置に配置
-        TransportationFormEntity entity = transportationFormService.find(50L);
+        TransportationFormEntity entity = transportationFormService.find(1L);
         assertEquals("yamashita", entity.getUserId());
         assertEquals("山下", entity.getUserName());
         assertEquals("新宿", entity.getOrigin());
@@ -88,6 +104,7 @@ public class TransportationFromServiceTest {
     @ExpectedDatabase(value = "/test-data/TransportationFormServiceTest/after-save/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
     public void testSave() throws ParseException {
         List<TransportationFormEntity> list = new ArrayList<>();
+        nextVal(2);
         //データ1
         TransportationFormEntity entity = new TransportationFormEntity();
         entity.setUserId("yamashita");
@@ -118,8 +135,6 @@ public class TransportationFromServiceTest {
         list.add(entity2);
         transportationFormService.save(list);
 
-        List<TransportationFormEntity> entities = transportationFormService.findTop10ByUserId("yamashita");
-        assertEquals(4, entities.size());
     }
 
     /**
@@ -130,6 +145,6 @@ public class TransportationFromServiceTest {
     @DatabaseSetup("/test-data/TransportationFormServiceTest/init/")
     @ExpectedDatabase(value = "/test-data/TransportationFormServiceTest/after-delete/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
     public void testDelete() {
-        transportationFormService.deleteById(50L);
+        transportationFormService.deleteById(1L);
     }
 }

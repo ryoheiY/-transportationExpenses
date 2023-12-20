@@ -1,2 +1,2 @@
 id,username, userid, origin, destination, one_way, expense, departure_date,departure_sub_no, created_at
-51,山下,yamashita,渋谷,川崎,0,430,2023-12-08,1,2023-12-09 00:03:00
+2,山下,yamashita,渋谷,川崎,0,430,2023-12-08,1,2023-12-09 00:03:00

@@ -13,7 +13,9 @@ import java.util.Date;
 public class TransportationFormEntity {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transportation_form_seq")
+    @SequenceGenerator(name = "transportation_form_seq", sequenceName = "transportation_form_seq",
+            initialValue = 1, allocationSize = 1)
     Long id;
 
     /**
@@ -70,4 +72,20 @@ public class TransportationFormEntity {
      */
     @Column(name = "created_at")
     Date createdAt;
+
+    @Override
+    public String toString() {
+        return "TransportationFormEntity{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", origin='" + origin + '\'' +
+                ", destination='" + destination + '\'' +
+                ", isOneWay=" + isOneWay +
+                ", expense=" + expense +
+                ", departureDate=" + departureDate +
+                ", departureSubNo=" + departureSubNo +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }
