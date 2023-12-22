@@ -41,7 +41,7 @@ public class TransportationFormServiceImpl implements TransportationFormService 
      */
     @Override
     public List<TransportationFormEntity> findAllByUserIdAndDepartureDateBetween(String userId, Date start, Date end) {
-        return repository.findByUserIdAndDepartureDateBetween(userId, start, end);
+        return repository.findByDepartureDateBetweenAndUserId(start, end, userId);
     }
 
     /**
@@ -66,17 +66,6 @@ public class TransportationFormServiceImpl implements TransportationFormService 
     public TransportationFormEntity find(Long id) {
         Optional<TransportationFormEntity> data = repository.findById(id);
         return data.orElseThrow();
-    }
-
-    /**
-     * ユーザの最新10件の交通費申請を取得
-     *
-     * @param userId 　ユーザID
-     * @return 交通費申請
-     */
-    @Override
-    public List<TransportationFormEntity> findTop10ByUserId(String userId) {
-        return repository.findTop10ByUserId(userId);
     }
 
     /**

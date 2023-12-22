@@ -7,9 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface TransportationFormEntityRepository extends JpaRepository<TransportationFormEntity, Long> {
-    List<TransportationFormEntity> findTop10ByUserId(String userId);
-
-    List<TransportationFormEntity> findByUserIdAndDepartureDateBetween(String userId, Date year, Date month);
+    List<TransportationFormEntity> findByDepartureDateBetweenAndUserId(Date year, Date month, String userId);
 
     List<TransportationFormEntity> findByDepartureDateBetween(Date year, Date month);
 }

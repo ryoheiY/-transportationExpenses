@@ -37,14 +37,6 @@ public interface TransportationFormService {
     TransportationFormEntity find(Long id);
 
     /**
-     * 最新10件の交通費申請を取得
-     *
-     * @param userId 　ユーザID
-     * @return 交通費申請
-     */
-    List<TransportationFormEntity> findTop10ByUserId(String userId);
-
-    /**
      * 交通費申請をDBに保存する
      *
      * @param formData 交通費申請
