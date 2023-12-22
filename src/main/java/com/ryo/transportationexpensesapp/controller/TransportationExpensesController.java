@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController(value = "/user")
+@RestController
 public class TransportationExpensesController {
     TransportationFormService transportationFormService;
 
@@ -26,7 +26,7 @@ public class TransportationExpensesController {
      *
      * @return 費用
      */
-    @GetMapping("/expense")
+    @GetMapping("/user/expense")
     public ResponseEntity<?> returnExpense() {
         return null;
     }
@@ -37,7 +37,7 @@ public class TransportationExpensesController {
      * @param expenses 交通費申請
      * @return ステータス
      */
-    @PostMapping("/expenses")
+    @PostMapping("/user/expenses")
     public ResponseEntity<Map<String, Object>> saveExpense(
             @RequestParam(name = "expenses") List<TransportationFormEntity> expenses) {
         Map<String, Object> map = null;
@@ -54,7 +54,7 @@ public class TransportationExpensesController {
      * @param id id
      * @return ステータス
      */
-    @DeleteMapping("/expense/{id}")
+    @DeleteMapping("/user/expense/{id}")
     public ResponseEntity<Map<String, Object>> deleteExpense(
             @PathVariable(name = "id") Long id
     ) {
@@ -68,7 +68,7 @@ public class TransportationExpensesController {
      *
      * @return 交通費申請
      */
-    @GetMapping("/expenses")
+    @GetMapping("/user/expenses")
     public ResponseEntity<Map<String, Object>> getExpenseForYear(
             @RequestParam(name = "data") Map<String, Object> data
     ) {
@@ -76,8 +76,8 @@ public class TransportationExpensesController {
         String userId = (String) data.get("user-id");
         Date start = (Date) data.get("start-date");
         Date end = (Date) data.get("end-date");
-        List<TransportationFormEntity> list = transportationFormService.findAllByUserIdAndDepartureDateBetween(userId,start,end);
-        map.put("data",list);
+        List<TransportationFormEntity> list = transportationFormService.findAllByUserIdAndDepartureDateBetween(userId, start, end);
+        map.put("data", list);
         return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
 

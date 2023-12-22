@@ -23,12 +23,9 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestPropertySource(locations = "classpath:test.properties")
 @SpringBootTest
@@ -63,11 +60,12 @@ public class TransportationFromServiceTest {
 
     /**
      * シーケンスを指定回数進める
+     *
      * @param count 回数
      */
-    private void nextVal(int count){
+    private void nextVal(int count) {
         String sql = "SELECT nextval('transportation_form_seq')";
-        for(int i =0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             jdbcTemplate.execute(sql);
         }
     }
@@ -93,6 +91,58 @@ public class TransportationFromServiceTest {
         assertEquals(dateTime, entity.getDepartureDate());
         Date dateTime2 = format.parse(inpDateStr2);
         assertEquals(dateTime2, entity.getCreatedAt());
+        assertTrue(entity.isCheck());
+    }
+
+    /**
+     * findAllByUserIdAndDepartureDateBetweenメソッドのテスト
+     */
+    @DisplayName("findAllByUserIdAndDepartureDateBetween method test")
+    @Test
+    @DatabaseSetup("/test-data/TransportationFormServiceTest/init-all/")
+    @ExpectedDatabase(value = "/test-data/TransportationFormServiceTest/init-all/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    public void testFindAllByUser() throws ParseException {
+        String inpDateStr1 = "2023-12-09 00:00:00";
+        String inpDateStr2 = "2023-12-30 00:00:00";
+        Date dateTime = format.parse(inpDateStr1);
+        Date datetime2 = format.parse(inpDateStr2);
+        List<TransportationFormEntity> entity = transportationFormService.findAllByUserIdAndDepartureDateBetween("yamashita", dateTime, datetime2);
+        Set<Long> longSet = new HashSet<>();
+        longSet.add(2L);
+        longSet.add(3L);
+        longSet.add(4L);
+        Set<Long> actualLongSet = new HashSet<Long>();
+        for (TransportationFormEntity entity1 : entity) {
+            actualLongSet.add(entity1.getId());
+        }
+        assertEquals(longSet, actualLongSet);
+    }
+
+    /**
+     * findAllメソッドのテスト
+     */
+    @DisplayName("findAll method test")
+    @Test
+    @DatabaseSetup("/test-data/TransportationFormServiceTest/init-all/")
+    @ExpectedDatabase(value = "/test-data/TransportationFormServiceTest/init-all/", assertionMode = DatabaseAssertionMode.NON_STRICT_UNORDERED)
+    public void testFindAll() throws ParseException {
+        String inpDateStr1 = "2023-12-09 00:00:00";
+        String inpDateStr2 = "2023-12-30 00:00:00";
+        Date dateTime = format.parse(inpDateStr1);
+        Date datetime2 = format.parse(inpDateStr2);
+        List<TransportationFormEntity> entity = transportationFormService.findAll(dateTime, datetime2);
+        Set<Long> longSet = new HashSet<>();
+        longSet.add(2L);
+        longSet.add(3L);
+        longSet.add(4L);
+        longSet.add(7L);
+        longSet.add(8L);
+        longSet.add(9L);
+        Set<Long> actualLongSet = new HashSet<Long>();
+        for (TransportationFormEntity entity1 : entity) {
+            actualLongSet.add(entity1.getId());
+        }
+        assertEquals(longSet, actualLongSet);
     }
 
     /**
@@ -117,7 +167,7 @@ public class TransportationFromServiceTest {
         String inpDateStr2 = "2023-12-13 00:03:00";
         entity.setDepartureDate(format.parse(inpDateStr1));
         entity.setCreatedAt(format.parse(inpDateStr2));
-        entity.setDepartureSubNo(1);
+        entity.setCheck(true);
         list.add(entity);
         //データ2
         TransportationFormEntity entity2 = new TransportationFormEntity();
@@ -131,7 +181,7 @@ public class TransportationFromServiceTest {
         inpDateStr2 = "2023-12-13 00:03:10";
         entity2.setDepartureDate(format.parse(inpDateStr1));
         entity2.setCreatedAt(format.parse(inpDateStr2));
-        entity2.setDepartureSubNo(2);
+        entity2.setCheck(true);
         list.add(entity2);
         transportationFormService.save(list);
 

@@ -62,10 +62,10 @@ public class TransportationFormEntity {
     Date departureDate;
 
     /**
-     * 出発日枝番
+     * チェックフラグ
      */
-    @Column(name = "departure_sub_no")
-    Integer departureSubNo;
+    @Column(name = "is_check")
+    boolean isCheck;
 
     /**
      * 申請日
@@ -84,7 +84,7 @@ public class TransportationFormEntity {
                 ", isOneWay=" + isOneWay +
                 ", expense=" + expense +
                 ", departureDate=" + departureDate +
-                ", departureSubNo=" + departureSubNo +
+                ", isCheck=" + isCheck +
                 ", createdAt=" + createdAt +
                 '}';
     }
