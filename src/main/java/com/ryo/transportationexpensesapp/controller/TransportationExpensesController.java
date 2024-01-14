@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class TransportationExpensesController {
@@ -26,7 +23,7 @@ public class TransportationExpensesController {
      *
      * @return 費用
      */
-    @GetMapping("/user/expense")
+    @GetMapping("/transportation/expense")
     public ResponseEntity<?> returnExpense() {
         return null;
     }
@@ -34,19 +31,35 @@ public class TransportationExpensesController {
     /**
      * DBに交通費申請を保存する
      *
-     * @param expenses 交通費申請
+     * @param expense 交通費申請
      * @return ステータス
      */
-    @PostMapping("/user/expenses")
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/transportation/expense")
     public ResponseEntity<Map<String, Object>> saveExpense(
-            @RequestParam(name = "expenses") List<TransportationFormEntity> expenses) {
+            @RequestBody Map<String, Object> expense) {
         Map<String, Object> map = null;
-        if (expenses != null || expenses.isEmpty()) {
+        if (expense != null) {
             return new ResponseEntity<Map<String, Object>>(map, HttpStatus.NO_CONTENT);
         }
-        transportationFormService.save(expenses);
+        List<TransportationFormEntity> list = new ArrayList<>();
+//        list.add(expense);
+//        transportationFormService.save(list);
         return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
+//    @CrossOrigin(origins = "http://localhost:3000")
+//    @PostMapping("/transportation/expense")
+//    public ResponseEntity<Map<String, Object>> saveExpense(
+//            @RequestParam(name = "expense") TransportationFormEntity expense) {
+//        Map<String, Object> map = null;
+//        if (expense != null) {
+//            return new ResponseEntity<Map<String, Object>>(map, HttpStatus.NO_CONTENT);
+//        }
+//        List<TransportationFormEntity> list = new ArrayList<>();
+//        list.add(expense);
+//        transportationFormService.save(list);
+//        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+//    }
 
     /**
      * 指定IDの交通費申請を削除する
@@ -54,7 +67,7 @@ public class TransportationExpensesController {
      * @param id id
      * @return ステータス
      */
-    @DeleteMapping("/user/expense/{id}")
+    @DeleteMapping("/transportation/expense/{id}")
     public ResponseEntity<Map<String, Object>> deleteExpense(
             @PathVariable(name = "id") Long id
     ) {
@@ -68,7 +81,7 @@ public class TransportationExpensesController {
      *
      * @return 交通費申請
      */
-    @GetMapping("/user/expenses")
+    @GetMapping("/transportation/expenses")
     public ResponseEntity<Map<String, Object>> getExpenseForYear(
             @RequestParam(name = "data") Map<String, Object> data
     ) {

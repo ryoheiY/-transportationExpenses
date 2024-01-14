@@ -1,5 +1,6 @@
 package com.ryo.transportationexpensesapp.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +22,14 @@ public class TransportationFormEntity {
     /**
      * ユーザID
      */
+    @JsonProperty("userid")
     @Column(name = "userid")
     String userId;
 
     /**
      * ユーザ名
      */
+    @JsonProperty("username")
     @Column(name = "username")
     String userName;
 
@@ -34,42 +37,49 @@ public class TransportationFormEntity {
     /**
      * 出発地点
      */
+    @JsonProperty("origin")
     @Column(name = "origin")
     String origin;
 
     /**
      * 目的地
      */
+    @JsonProperty("destination")
     @Column(name = "destination")
     String destination;
 
     /**
      * 片道フラグ
      */
+    @JsonProperty("one_way")
     @Column(name = "one_way")
     boolean isOneWay;
 
     /**
      * 費用
      */
+    @JsonProperty("expense")
     @Column(name = "expense")
     int expense;
 
     /**
      * 出発日
      */
+    @JsonProperty("departure_date")
     @Column(name = "departure_date")
     Date departureDate;
 
     /**
      * チェックフラグ
      */
+    @JsonProperty("is_check")
     @Column(name = "is_check")
     boolean isCheck;
 
     /**
      * 申請日
      */
+    @JsonProperty("created_at")
     @Column(name = "created_at")
     Date createdAt;
 
