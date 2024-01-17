@@ -5,6 +5,8 @@ import com.ryo.transportationexpensesapp.service.TransportationFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -34,18 +36,20 @@ public class TransportationExpensesController {
      * @param expense 交通費申請
      * @return ステータス
      */
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/transportation/expense")
-    public ResponseEntity<Map<String, Object>> saveExpense(
-            @RequestBody Map<String, Object> expense) {
-        Map<String, Object> map = null;
+    public ResponseEntity<Map> saveExpense(
+            @RequestBody TransportationFormEntity expense) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key1", "error1");
+        map.put("key12", "error1");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (expense != null) {
-            return new ResponseEntity<Map<String, Object>>(map, HttpStatus.NO_CONTENT);
+            //return new ResponseEntity<>(expense, HttpStatus.NO_CONTENT);
         }
         List<TransportationFormEntity> list = new ArrayList<>();
 //        list.add(expense);
 //        transportationFormService.save(list);
-        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 //    @CrossOrigin(origins = "http://localhost:3000")
 //    @PostMapping("/transportation/expense")
