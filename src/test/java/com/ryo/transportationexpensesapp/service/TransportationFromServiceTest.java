@@ -64,7 +64,7 @@ public class TransportationFromServiceTest {
      * @param count 回数
      */
     private void nextVal(int count) {
-        String sql = "SELECT nextval('transportation_form_seq')";
+        String sql = "SELECT nextval('transportation_form_id_seq')";
         for (int i = 0; i < count; i++) {
             jdbcTemplate.execute(sql);
         }

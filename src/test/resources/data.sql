@@ -1,1 +1,2 @@
-SELECT id FROM transportation_form;
+SELECT id
+FROM transportation_form;
