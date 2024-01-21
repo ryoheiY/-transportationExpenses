@@ -2,6 +2,8 @@ package com.ryo.transportationexpensesapp.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,8 +16,8 @@ import java.util.Date;
 public class TransportationFormEntity {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transportation_form_seq")
-    @SequenceGenerator(name = "transportation_form_seq", sequenceName = "transportation_form_seq",
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transportation_form_id_seq")
+    @SequenceGenerator(name = "transportation_form_id_seq", sequenceName = "transportation_form_id_seq",
             initialValue = 1, allocationSize = 1)
     Long id;
 
@@ -39,6 +41,7 @@ public class TransportationFormEntity {
      */
     @JsonProperty("origin")
     @Column(name = "origin")
+    @NotNull
     String origin;
 
     /**
@@ -46,6 +49,7 @@ public class TransportationFormEntity {
      */
     @JsonProperty("destination")
     @Column(name = "destination")
+    @NotNull
     String destination;
 
     /**
@@ -53,6 +57,7 @@ public class TransportationFormEntity {
      */
     @JsonProperty("one_way")
     @Column(name = "one_way")
+    @NotNull
     boolean isOneWay;
 
     /**
@@ -60,6 +65,7 @@ public class TransportationFormEntity {
      */
     @JsonProperty("expense")
     @Column(name = "expense")
+    @Min(1)
     int expense;
 
     /**
@@ -67,6 +73,7 @@ public class TransportationFormEntity {
      */
     @JsonProperty("departure_date")
     @Column(name = "departure_date")
+    @NotNull
     Date departureDate;
 
     /**

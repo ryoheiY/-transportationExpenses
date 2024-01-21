@@ -2,11 +2,13 @@ package com.ryo.transportationexpensesapp.controller;
 
 import com.ryo.transportationexpensesapp.model.TransportationFormEntity;
 import com.ryo.transportationexpensesapp.service.TransportationFormService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -38,32 +40,28 @@ public class TransportationExpensesController {
      */
     @PostMapping("/transportation/expense")
     public ResponseEntity<Map> saveExpense(
-            @RequestBody TransportationFormEntity expense) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("key1", "error1");
-        map.put("key12", "error1");
+            @RequestBody @Valid TransportationFormEntity expense) {
+        Map<String, Object> responsMap = new HashMap<>();
+        //Tokenから情報を取得
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (expense != null) {
-            //return new ResponseEntity<>(expense, HttpStatus.NO_CONTENT);
+        Jwt principal = (Jwt) auth.getPrincipal();
+        Map<String, Object> attributes = principal.getClaims();
+        String userid = (String) attributes.get("preferred_username");
+        String username = (String) attributes.get("name");
+        if (expense == null) {
+            responsMap.put("message", "data is invalid");
+            return new ResponseEntity<>(responsMap, HttpStatus.BAD_REQUEST);
         }
+        //Tokenから取得した情報をセットし、DBに保存
+        expense.setCreatedAt(new Date());
+        expense.setUserId(userid);
+        expense.setUserName(username);
         List<TransportationFormEntity> list = new ArrayList<>();
-//        list.add(expense);
-//        transportationFormService.save(list);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        list.add(expense);
+        transportationFormService.save(list);
+        responsMap.put("message", "successful!");
+        return new ResponseEntity<>(responsMap, HttpStatus.OK);
     }
-//    @CrossOrigin(origins = "http://localhost:3000")
-//    @PostMapping("/transportation/expense")
-//    public ResponseEntity<Map<String, Object>> saveExpense(
-//            @RequestParam(name = "expense") TransportationFormEntity expense) {
-//        Map<String, Object> map = null;
-//        if (expense != null) {
-//            return new ResponseEntity<Map<String, Object>>(map, HttpStatus.NO_CONTENT);
-//        }
-//        List<TransportationFormEntity> list = new ArrayList<>();
-//        list.add(expense);
-//        transportationFormService.save(list);
-//        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
-//    }
 
     /**
      * 指定IDの交通費申請を削除する
